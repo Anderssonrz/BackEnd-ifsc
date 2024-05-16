@@ -8,21 +8,11 @@ $file = fopen($filename, "r");
 if ($file) {
    // criar array "clientes" vazio
    $aClientes = [];
-   $header = null;
+
    // processa as linhas do arquivo
-   while (($data = fgetcsv($file, 1000, ";")) !== FALSE) {
+   while (($data = fgetcsv($file,1000,";")) !== FALSE) {
       //print_r($data);
       // adicionar $data ao array "clientes"
-      if ($header == null) {
-         $header = $data;
-         continue;
-      }
-      $newdata = [];
-      //print_r($newdata);
-      for ($i = 0; $i < sizeof($data); $i++) {
-         $newdata[$header[$i]] = $data[$i];
-      }
-      //print_r($newdata);
       array_push($aClientes, $data);
    }
    // converter array em json
@@ -31,3 +21,4 @@ if ($file) {
    print($json);
    fclose($file);
 }
+?>
