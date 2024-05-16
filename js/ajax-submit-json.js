@@ -1,5 +1,4 @@
-// versao 2
-const resp = document.getElementById("resp")
+// versao 2const resp = document.getElementById("resp")
 
 document.addEventListener("submit", (e) => {
     e.preventDefault();

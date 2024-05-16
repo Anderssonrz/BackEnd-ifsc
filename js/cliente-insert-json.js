@@ -2,12 +2,12 @@
 document.addEventListener("submit", (e) => {
    e.preventDefault();
    const form = document.querySelector("form");
-   let cliente = {
+   let data = {
       codigo : form.inCodigo.value,
       nome   : form.inNome.value,
       email  : form.inEmail.value
    };
-   console.log(cliente);
+   console.log(data);
    
    const req = new XMLHttpRequest();
    req.onload = function () {
@@ -22,5 +22,5 @@ document.addEventListener("submit", (e) => {
    }
    req.open("POST", "cliente-insert-json.php");
    req.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
-   req.send(JSON.stringify(cliente));
+   req.send(JSON.stringify(data));
 })
