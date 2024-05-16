@@ -1,12 +1,7 @@
 const btn = document.getElementById("btn");
 const content = document.getElementById("content");
 
-btn.addEventListener("click", buscaClientes ());
-document.addEventListener("load", buscaClientes());
-
-function buscaClientes(){
-
-
+btn.addEventListener("click", (e) => {
    const req = new XMLHttpRequest();
    req.onload = function () {
       if (req.status == 200) {
@@ -31,4 +26,4 @@ function buscaClientes(){
    }
    req.open("GET", "busca-clientes.php");
    req.send();
-}
+})
