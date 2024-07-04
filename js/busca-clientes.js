@@ -2,11 +2,9 @@ const btn = document.getElementById("btn");
 const content = document.getElementById("content");
 
 btn.addEventListener("click", buscaClientes ());
-document.addEventListener("load", buscaClientes());
+//document.addEventListener("load", buscaClientes());
 
 function buscaClientes(){
-
-
    const req = new XMLHttpRequest();
    req.onload = function () {
       if (req.status == 200) {
