@@ -5,8 +5,8 @@ print_r($_REQUEST);
 $request = (object) $_REQUEST;
 
 try{
-    $stmt = $conn->prepare("INSERT INTO cliente (nome, email) VALUES (?,?)") ;
-    $stmt->execute([$request->nome,$request->email]); 
+    $stmt = $conn->prepare("DELETE FROM cliente WHERE codigo= ?") ;
+    $stmt->execute([$request->id]); 
     
     // $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     // $jsan = json_encode($results);
