@@ -7,12 +7,11 @@ const content = document.getElementById("content");
 const frmIncluirCliente = document.getElementById("frmIncluirCliente");
 const frmBuscaCliente = document.getElementById("frmBuscaCliente");
 
-// Carregar UFs quando abrir o modal de inclusão de cliente 
+// Carregar UFs quando abrir o modal de inclusão de cliente
 btnIncluirCliente.addEventListener("click", (e) => {
   carregarUFs("inUf");
   bootstrap.Modal.getOrCreateInstance(document.getElementById("modalIncluirCliente")).show();
 });
-
 
 // Evento de inclusão de cliente
 btnIncluir.addEventListener("click", (e) => {
@@ -21,17 +20,17 @@ btnIncluir.addEventListener("click", (e) => {
   const xhr = new XMLHttpRequest();
   let cliente = new FormData(frmIncluirCliente);
 
-// Para fechar o modal após inclusão
-xhr.onload = function () {
-  if (xhr.status == 200) {
-    alert("Inclusão Ok");
-    frmIncluirCliente.reset();
-    bootstrap.Modal.getOrCreateInstance(document.getElementById("modalIncluirCliente")).hide();
-    buscaClientes();
-  } else {
-    alert("Erro na Inclusão");
-  }
-};
+  // Para fechar o modal após inclusão
+  xhr.onload = function () {
+    if (xhr.status == 200) {
+      alert("Inclusão Ok");
+      frmIncluirCliente.reset();
+      bootstrap.Modal.getOrCreateInstance(document.getElementById("modalIncluirCliente")).hide();
+      buscaClientes();
+    } else {
+      alert("Erro na Inclusão");
+    }
+  };
 
   xhr.open("POST", "cliente-insert.php");
   xhr.send(cliente);
@@ -43,6 +42,7 @@ document.addEventListener("DOMContentLoaded", buscaClientes);
 frmBuscaCliente.addEventListener("submit", buscaClientes);
 
 function buscaClientes(e) {
+  if (e) e.preventDefault(); // Previne o comportamento padrão do botão, se presente
   const expressaoBusca = document.getElementById("expressaoBusca").value.trim();
   const req = new XMLHttpRequest();
   req.onload = function () {
@@ -68,8 +68,8 @@ function buscaClientes(e) {
         html += `<button class="btn btn-danger" onClick="delCliente(${cliente.id_cliente});"><i class="fa-solid fa-trash-can"></i></button>`;
         html += `</td>`;
         html += `</tr>`;
-    }
-    
+      }
+
       html += "</table>";
       content.innerHTML = html;
     } else {
@@ -81,14 +81,11 @@ function buscaClientes(e) {
   req.send();
 }
 
-
-
-// Função para limpar
+// Função para limpar busca
 function limparBusca() {
   document.getElementById('expressaoBusca').value = '';  // Limpa o valor do campo de busca
   buscaClientes();  // Recarrega todos os clientes
 }
-
 
 function showClienteUpdForm(id_cliente) {
   console.log("Entrou na função showClienteUpdForm com código:", id_cliente);
@@ -100,7 +97,7 @@ function showClienteUpdForm(id_cliente) {
       let cliente = JSON.parse(xhr.responseText)[0];
       console.log("Cliente:", cliente);
       const frm = document.getElementById("frmAlterarCliente");
-      
+
       // Verificar se o formulário foi encontrado corretamente
       if (!frm) {
         console.error("Formulário de atualização não encontrado.");
@@ -116,8 +113,8 @@ function showClienteUpdForm(id_cliente) {
       // Espera para definir o UF após carregar as opções
       setTimeout(() => {
         frm.id_uf.value = cliente.id_uf;
-      }, 100); 
-      
+      }, 100);
+
       // Mostra o modal após carregar os dados
       bootstrap.Modal.getOrCreateInstance(document.getElementById("exampleModal")).show();
     } else {
@@ -135,7 +132,7 @@ btnAtualizar.addEventListener("click", (e) => {
   console.log("btnAtualizar.addEventListener");
 
   const frm = document.getElementById("frmAlterarCliente");
-  
+
   // Verificar se o formulário foi encontrado corretamente
   if (!frm) {
     console.error("Formulário de atualização não encontrado.");
@@ -160,7 +157,6 @@ btnAtualizar.addEventListener("click", (e) => {
   xhr.send(cliente);
 });
 
-
 // Função para excluir um cliente
 function delCliente(id_cliente) {
   if (confirm("Confirma a exclusão do registro?")) {
@@ -178,7 +174,7 @@ function delCliente(id_cliente) {
       }
     };
 
-    xhr.open("POST", "cliente-delete.php"); 
+    xhr.open("POST", "cliente-delete.php");
     xhr.send(data);
   }
 }
@@ -189,7 +185,6 @@ function carregarUFs(elementId) {
   xhr.onload = function () {
     if (xhr.status == 200) {
       console.log("Dados de UF:", xhr.responseText); // Verifica os dados das UF
-      ufs = JSON.parse(xhr.responseText);
       var arrayUF = JSON.parse(xhr.responseText);
 
       if (!Array.isArray(arrayUF)) {
@@ -212,9 +207,9 @@ function carregarUFs(elementId) {
   xhr.open("GET", "uf-controller.php");
   xhr.send();
 }
-document.addEventListener("DOMContentLoaded", () => {
-  carregarUFs("inUf"); // Use IDs como strings
-  carregarUFs("upUf");  // Use IDs como strings
 
-  buscaClientes();
+document.addEventListener("DOMContentLoaded", () => {
+  carregarUFs("inUf"); // Carregar UFs para o formulário de inclusão
+  carregarUFs("upUf"); // Carregar UFs para o formulário de atualização
+  buscaClientes(); // Carregar clientes ao inicializar a página
 });
