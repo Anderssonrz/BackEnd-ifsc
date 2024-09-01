@@ -7,13 +7,62 @@ if (empty($_SESSION['email'])) {
 ?>
 <!doctype html>
 <html lang="pt-br">
+
 <head>
-   <title>Cliente</title>
+   <title>Cadastro de Clientes</title>
    <meta charset="utf-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
    <!-- Bootstrap CSS v5.3.2 -->
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+   <style>
+      body {
+         background-color: #f4f7fa;
+      }
+
+      .container {
+         background: #fff;
+         padding: 20px;
+         border-radius: 10px;
+         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .modal-content {
+         border-radius: 10px;
+      }
+
+      .form-label {
+         font-weight: 500;
+      }
+
+      .btn-primary, .btn-success {
+         font-weight: 600;
+      }
+
+      .btn-yellow {
+         background-color: #ffc107;
+         color: #000;
+         border: none;
+      }
+
+      .btn-yellow:hover {
+         background-color: #e0a800;
+      }
+
+      .btn-close {
+         padding: 1rem;
+         margin: -1rem -1rem -1rem auto;
+      }
+
+      #btnIncluirCliente {
+         font-size: 14px;
+         padding: 10px 20px;
+      }
+
+      .text-center {
+         margin-bottom: 20px;
+      }
+   </style>
 </head>
 
 <body>
@@ -50,7 +99,7 @@ if (empty($_SESSION['email'])) {
                         <input type="email" class="form-control" name="email" id="inEmail" required>
                      </div>
                      <div class="mb-3">
-                        <label for="id_uf" class="form-label">UF</label>
+                        <label for="inUf" class="form-label">UF</label>
                         <select name="id_uf" id="inUf" class="form-select" required></select>
                      </div>
                   </form>
@@ -87,13 +136,13 @@ if (empty($_SESSION['email'])) {
                      </div>
                      <div class="mb-3">
                         <label for="uUf" class="form-label">UF</label>
-                        <select name="id_uf" id="id_uf" class="form-select" required></select>
+                        <select name="id_uf" id="uUf" class="form-select" required></select>
                      </div>
                   </form>
                </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                  <button type="button" id="btnAtualizar" class="btn btn-primary">Salvar Alterações</button>
+                  <button type="button" id="btnAtualizar" class="btn btn-warning">Salvar Alterações</button>
                </div>
             </div>
          </div>

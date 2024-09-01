@@ -1,4 +1,4 @@
-// CHAMADA DE FUNÇÕES
+// Seletores de Elementos
 const btnBusca = document.getElementById("btnBusca");
 const btnIncluirCliente = document.getElementById("btnIncluirCliente");
 const btnIncluir = document.getElementById("btnIncluir");
@@ -7,15 +7,13 @@ const content = document.getElementById("content");
 const frmIncluirCliente = document.getElementById("frmIncluirCliente");
 const frmBuscaCliente = document.getElementById("frmBuscaCliente");
 
-// -----------------------------------------------------------------------------------
-
+// Carregar UFs quando abrir o modal de inclusão de cliente 
 btnIncluirCliente.addEventListener("click", (e) => {
-  carregarUFs("id_uf");
+  carregarUFs("inUf"); // Corrigido para o ID correto
   frmIncluirCliente.style.setProperty("display", "block");
 });
 
-// -----------------------------------------------------------------------------------
-
+// Evento de inclusão de cliente
 btnIncluir.addEventListener("click", (e) => {
   e.preventDefault(); // Previne o comportamento padrão do botão
 
@@ -37,36 +35,34 @@ btnIncluir.addEventListener("click", (e) => {
   xhr.send(cliente);
 });
 
-// -----------------------------------------------------------------------------------
-
+// Evento de busca de clientes
 btnBusca.addEventListener("click", buscaClientes);
 document.addEventListener("DOMContentLoaded", buscaClientes);
 frmBuscaCliente.addEventListener("submit", buscaClientes);
 
-// Função de busca de clientes
 function buscaClientes(e) {
   if (e) e.preventDefault(); // Previne o comportamento padrão do formulário
 
-  const expressaoBusca = document.getElementById("expressaoBusca").value;
+  const expressaoBusca = document.getElementById("expressaoBusca").value.trim();
   const req = new XMLHttpRequest();
   req.onload = function () {
-    console.log("Resposta da API:", req.responseText); // Verifica a resposta da API
     if (req.status == 200) {
       let html = "<table class='table table-bordered table-hover table-sm'>";
       html += "<tr><th>CÓDIGO</th><th>NOME</th><th>E-MAIL</th><th>UF</th><th>Editar/Excluir</th></tr>";
       const vetorClientes = JSON.parse(this.responseText);
 
-      // Adiciona verificação de tipo para depuração
       if (!Array.isArray(vetorClientes)) {
         console.error("Erro: A resposta da API não é um array.");
         return;
       }
 
       for (let cliente of vetorClientes) {
-        console.log("Cliente:", cliente); // Verifica cada cliente
-        html += `<tr><td>${cliente.id_cliente ?? 'N/A'}</td><td>${cliente.nome ?? 'N/A'}</td><td>${cliente.email ?? 'N/A'}</td><td>${cliente.id_uf ?? 'N/A'}</td>`;
+        let uf = ufs.find(u => u.id_uf === cliente.id_uf);
+        let ufDescricao = uf ? uf.sigla : 'N/A'; // Use sigla ou outro campo adequado
+
+        html += `<tr><td>${cliente.id_cliente ?? 'N/A'}</td><td>${cliente.nome ?? 'N/A'}</td><td>${cliente.email ?? 'N/A'}</td><td>${ufDescricao}</td>`;
         html += '<td>';
-        html += ` <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-info" onClick="showClienteUpdForm(${cliente.id_cliente})"><i class="fa-solid fa-pencil"></i></button>`;
+        html += ` <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-warning" onClick="showClienteUpdForm(${cliente.id_cliente})"><i class="fa-solid fa-pencil"></i></button>`;
         html += ` <button class="btn btn-danger" onClick="delCliente(${cliente.id_cliente});"><i class="fa-solid fa-trash-can"></i></button>`;
         html += '</td></tr>';
       }
@@ -81,17 +77,14 @@ function buscaClientes(e) {
   req.send();
 }
 
-// Função para limpar a busca
+
+
+// Função para limpar
 function limparBusca() {
   document.getElementById('expressaoBusca').value = '';  // Limpa o valor do campo de busca
+  buscaClientes();  // Recarrega todos os clientes
 }
 
-// Eventos
-btnBusca.addEventListener("click", buscaClientes);
-document.addEventListener("DOMContentLoaded", buscaClientes);
-frmBuscaCliente.addEventListener("submit", buscaClientes);
-
-// ---------------------------------------------------------------------------------------
 
 function showClienteUpdForm(id_cliente) {
   console.log("Entrou na função showClienteUpdForm com código:", id_cliente);
@@ -106,7 +99,13 @@ function showClienteUpdForm(id_cliente) {
       frm.id_cliente.value = cliente.id_cliente;
       frm.nome.value = cliente.nome;
       frm.email.value = cliente.email;
-      frm.id_uf.value = cliente.id_uf;
+
+      carregarUFs("uUf"); // Carregar UFs antes de definir o valor
+
+      // Espera para definir o UF após carregar as opções
+      setTimeout(() => {
+        frm.id_uf.value = cliente.id_uf;
+      }, 100); 
     } else {
       console.error("Erro ao buscar cliente:", xhr.status, xhr.statusText);
     }
@@ -115,8 +114,6 @@ function showClienteUpdForm(id_cliente) {
   xhr.open("GET", `cliente-get.php?id_cliente=${id_cliente}`);
   xhr.send();
 }
-
-// --------------------------------------------------------------------------
 
 btnAtualizar.addEventListener("click", (e) => {
   e.preventDefault(); // Previne o comportamento padrão do botão
@@ -131,7 +128,9 @@ btnAtualizar.addEventListener("click", (e) => {
     console.log("Resposta ao atualizar cliente:", xhr.responseText);
     if (xhr.status == 200) {
       buscaClientes(); // Atualiza a lista de clientes
-      bootstrap.Modal
+      alert("Atualização Ok");
+      bootstrap.Modal.getInstance(document.getElementById("exampleModal")).hide(); // Fecha o modal após atualização
+    } else {
       alert("Erro ao atualizar cliente.");
     }
   };
@@ -140,12 +139,11 @@ btnAtualizar.addEventListener("click", (e) => {
   xhr.send(cliente);
 });
 
-// -------------------------------------------------------------------------------------
-
-function delCliente(id_uf) {
+// Função para excluir um cliente
+function delCliente(id_cliente) {
   if (confirm("Confirma a exclusão do registro?")) {
     let data = new FormData();
-    data.append("id", id_uf);
+    data.append("id_cliente", id_cliente);
 
     let xhr = new XMLHttpRequest();
     xhr.onload = function () {
@@ -157,18 +155,18 @@ function delCliente(id_uf) {
       }
     };
 
-    xhr.open("POST", "cliente-delete.php");
+    xhr.open("POST", "cliente-delete.php"); 
     xhr.send(data);
   }
 }
 
-// -------------------------------------------------------------------------------------
 
 function carregarUFs(elementId) {
   var elemSelectUf = document.getElementById(elementId);
   var xhr = new XMLHttpRequest();
   xhr.onload = function () {
-    if (xhr.status == 200 && xhr.readyState == 4) {
+    if (xhr.status == 200) {
+      ufs = JSON.parse(xhr.responseText);
       console.log("Dados de UF:", xhr.responseText); // Verifica os dados das UF
       var arrayUF = JSON.parse(xhr.responseText);
 
@@ -190,5 +188,9 @@ function carregarUFs(elementId) {
   };
 
   xhr.open("GET", "uf-controller.php");
-  xhr.send(data);
+  xhr.send();
 }
+document.addEventListener("DOMContentLoaded", () => {
+  carregarUFs();
+  buscaClientes();
+});
