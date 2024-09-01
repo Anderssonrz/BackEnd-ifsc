@@ -123,20 +123,20 @@ if (empty($_SESSION['email'])) {
                <div class="modal-body">
                   <form id="frmAlterarCliente">
                      <div class="mb-3">
-                        <label for="uCodigo" class="form-label">Código</label>
-                        <input type="number" class="form-control" name="id_cliente" id="uCodigo" readonly>
+                        <label for="upCodigo" class="form-label">Código</label>
+                        <input type="number" class="form-control" name="id_cliente" id="upCodigo" readonly>
                      </div>
                      <div class="mb-3">
-                        <label for="uNome" class="form-label">Nome</label>
-                        <input type="text" class="form-control" name="nome" id="uNome" required>
+                        <label for="upNome" class="form-label">Nome</label>
+                        <input type="text" class="form-control" name="nome" id="upNome" required>
                      </div>
                      <div class="mb-3">
-                        <label for="uEmail" class="form-label">E-mail</label>
-                        <input type="email" class="form-control" name="email" id="uEmail" required>
+                        <label for="u´pEmail" class="form-label">E-mail</label>
+                        <input type="email" class="form-control" name="email" id="upEmail" required>
                      </div>
                      <div class="mb-3">
                         <label for="uUf" class="form-label">UF</label>
-                        <select name="id_uf" id="uUf" class="form-select" required></select>
+                        <select name="id_uf" id="upUf" class="form-select" required></select>
                      </div>
                   </form>
                </div>

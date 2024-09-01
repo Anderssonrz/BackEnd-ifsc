@@ -9,9 +9,10 @@ const frmBuscaCliente = document.getElementById("frmBuscaCliente");
 
 // Carregar UFs quando abrir o modal de inclusão de cliente 
 btnIncluirCliente.addEventListener("click", (e) => {
-  carregarUFs("inUf"); // Corrigido para o ID correto
-  frmIncluirCliente.style.setProperty("display", "block");
+  carregarUFs("inUf");
+  bootstrap.Modal.getOrCreateInstance(document.getElementById("modalIncluirCliente")).show();
 });
+
 
 // Evento de inclusão de cliente
 btnIncluir.addEventListener("click", (e) => {
@@ -20,16 +21,17 @@ btnIncluir.addEventListener("click", (e) => {
   const xhr = new XMLHttpRequest();
   let cliente = new FormData(frmIncluirCliente);
 
-  xhr.onload = function () {
-    if (xhr.status == 200) {
-      alert("Inclusão Ok");
-      frmIncluirCliente.reset();
-      frmIncluirCliente.style.setProperty("display", "none");
-      buscaClientes(); // Atualiza a lista de clientes
-    } else {
-      alert("Erro na Inclusão");
-    }
-  };
+// Para fechar o modal após inclusão
+xhr.onload = function () {
+  if (xhr.status == 200) {
+    alert("Inclusão Ok");
+    frmIncluirCliente.reset();
+    bootstrap.Modal.getOrCreateInstance(document.getElementById("modalIncluirCliente")).hide();
+    buscaClientes();
+  } else {
+    alert("Erro na Inclusão");
+  }
+};
 
   xhr.open("POST", "cliente-insert.php");
   xhr.send(cliente);
@@ -41,12 +43,11 @@ document.addEventListener("DOMContentLoaded", buscaClientes);
 frmBuscaCliente.addEventListener("submit", buscaClientes);
 
 function buscaClientes(e) {
-  if (e) e.preventDefault(); // Previne o comportamento padrão do formulário
-
   const expressaoBusca = document.getElementById("expressaoBusca").value.trim();
   const req = new XMLHttpRequest();
   req.onload = function () {
     if (req.status == 200) {
+      console.log(req.responseText);
       let html = "<table class='table table-bordered table-hover table-sm'>";
       html += "<tr><th>CÓDIGO</th><th>NOME</th><th>E-MAIL</th><th>UF</th><th>Editar/Excluir</th></tr>";
       const vetorClientes = JSON.parse(this.responseText);
@@ -57,15 +58,18 @@ function buscaClientes(e) {
       }
 
       for (let cliente of vetorClientes) {
-        let uf = ufs.find(u => u.id_uf === cliente.id_uf);
-        let ufDescricao = uf ? uf.sigla : 'N/A'; // Use sigla ou outro campo adequado
-
-        html += `<tr><td>${cliente.id_cliente ?? 'N/A'}</td><td>${cliente.nome ?? 'N/A'}</td><td>${cliente.email ?? 'N/A'}</td><td>${ufDescricao}</td>`;
-        html += '<td>';
-        html += ` <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-warning" onClick="showClienteUpdForm(${cliente.id_cliente})"><i class="fa-solid fa-pencil"></i></button>`;
-        html += ` <button class="btn btn-danger" onClick="delCliente(${cliente.id_cliente});"><i class="fa-solid fa-trash-can"></i></button>`;
-        html += '</td></tr>';
-      }
+        html += `<tr>`;
+        html += `<td>${cliente.id_cliente}</td>`;
+        html += `<td>${cliente.nome}</td>`;
+        html += `<td>${cliente.email}</td>`;
+        html += `<td>${cliente.sigla}</td>`;
+        html += `<td>`;
+        html += `<button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-warning" onClick="showClienteUpdForm(${cliente.id_cliente})"><i class="fa-solid fa-pencil"></i></button>`;
+        html += `<button class="btn btn-danger" onClick="delCliente(${cliente.id_cliente});"><i class="fa-solid fa-trash-can"></i></button>`;
+        html += `</td>`;
+        html += `</tr>`;
+    }
+    
       html += "</table>";
       content.innerHTML = html;
     } else {
@@ -96,6 +100,13 @@ function showClienteUpdForm(id_cliente) {
       let cliente = JSON.parse(xhr.responseText)[0];
       console.log("Cliente:", cliente);
       const frm = document.getElementById("frmAlterarCliente");
+      
+      // Verificar se o formulário foi encontrado corretamente
+      if (!frm) {
+        console.error("Formulário de atualização não encontrado.");
+        return;
+      }
+
       frm.id_cliente.value = cliente.id_cliente;
       frm.nome.value = cliente.nome;
       frm.email.value = cliente.email;
@@ -106,6 +117,9 @@ function showClienteUpdForm(id_cliente) {
       setTimeout(() => {
         frm.id_uf.value = cliente.id_uf;
       }, 100); 
+      
+      // Mostra o modal após carregar os dados
+      bootstrap.Modal.getOrCreateInstance(document.getElementById("exampleModal")).show();
     } else {
       console.error("Erro ao buscar cliente:", xhr.status, xhr.statusText);
     }
@@ -121,6 +135,13 @@ btnAtualizar.addEventListener("click", (e) => {
   console.log("btnAtualizar.addEventListener");
 
   const frm = document.getElementById("frmAlterarCliente");
+  
+  // Verificar se o formulário foi encontrado corretamente
+  if (!frm) {
+    console.error("Formulário de atualização não encontrado.");
+    return;
+  }
+
   let cliente = new FormData(frm);
 
   let xhr = new XMLHttpRequest();
@@ -129,7 +150,7 @@ btnAtualizar.addEventListener("click", (e) => {
     if (xhr.status == 200) {
       buscaClientes(); // Atualiza a lista de clientes
       alert("Atualização Ok");
-      bootstrap.Modal.getInstance(document.getElementById("exampleModal")).hide(); // Fecha o modal após atualização
+      bootstrap.Modal.getOrCreateInstance(document.getElementById("exampleModal")).hide(); // Fecha o modal após atualização
     } else {
       alert("Erro ao atualizar cliente.");
     }
@@ -138,6 +159,7 @@ btnAtualizar.addEventListener("click", (e) => {
   xhr.open("POST", "cliente-update.php");
   xhr.send(cliente);
 });
+
 
 // Função para excluir um cliente
 function delCliente(id_cliente) {
@@ -152,6 +174,7 @@ function delCliente(id_cliente) {
         buscaClientes(); // Atualiza a lista de clientes
       } else {
         alert(`Erro: ${xhr.status} ${xhr.statusText}`);
+        console.error("Erro na exclusão:", xhr.responseText); // Logar a resposta para depuração
       }
     };
 
@@ -160,14 +183,13 @@ function delCliente(id_cliente) {
   }
 }
 
-
 function carregarUFs(elementId) {
   var elemSelectUf = document.getElementById(elementId);
   var xhr = new XMLHttpRequest();
   xhr.onload = function () {
     if (xhr.status == 200) {
-      ufs = JSON.parse(xhr.responseText);
       console.log("Dados de UF:", xhr.responseText); // Verifica os dados das UF
+      ufs = JSON.parse(xhr.responseText);
       var arrayUF = JSON.parse(xhr.responseText);
 
       if (!Array.isArray(arrayUF)) {
@@ -191,6 +213,8 @@ function carregarUFs(elementId) {
   xhr.send();
 }
 document.addEventListener("DOMContentLoaded", () => {
-  carregarUFs();
+  carregarUFs("inUf"); // Use IDs como strings
+  carregarUFs("upUf");  // Use IDs como strings
+
   buscaClientes();
 });
