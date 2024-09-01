@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 27/08/2024 às 22:04
--- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- Generation Time: 22-Ago-2024 às 22:27
+-- Versão do servidor: 10.1.29-MariaDB
+-- PHP Version: 7.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,27 +19,27 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `meubanco`
+-- Database: `meubanco`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `cliente`
+-- Estrutura da tabela `cliente`
 --
 
 CREATE TABLE `cliente` (
-  `id_cliente` int(11) NOT NULL,
+  `codigo` int(11) NOT NULL,
   `nome` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `id_uf` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Despejando dados para a tabela `cliente`
+-- Extraindo dados da tabela `cliente`
 --
 
-INSERT INTO `cliente` (`id_cliente`, `nome`, `email`, `id_uf`) VALUES
+INSERT INTO `cliente` (`codigo`, `nome`, `email`, `id_uf`) VALUES
 (3, 'Marcelo', 'marcelo@gmail.com', 3),
 (4, 'Frank', 'Frank@gmail.com', 3),
 (5, 'Jose', 'jose@google.com', 3),
@@ -50,20 +51,20 @@ INSERT INTO `cliente` (`id_cliente`, `nome`, `email`, `id_uf`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `uf`
+-- Estrutura da tabela `uf`
 --
 
 CREATE TABLE `uf` (
   `id` int(11) NOT NULL,
   `nome` varchar(100) NOT NULL,
-  `sigla` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `sigla` char(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Despejando dados para a tabela `uf`
+-- Extraindo dados da tabela `uf`
 --
 
-INSERT INTO `uf` (`id_uf`, `nome`, `sigla`) VALUES
+INSERT INTO `uf` (`id`, `nome`, `sigla`) VALUES
 (1, 'Paraná', 'PR'),
 (2, 'Rio Grande do Sul', 'RS'),
 (3, 'Santa Catarina', 'SC'),
@@ -81,74 +82,75 @@ INSERT INTO `uf` (`id_uf`, `nome`, `sigla`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `user`
+-- Estrutura da tabela `user`
 --
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
-  `email` varchar(256) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `password` char(64) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Despejando dados para a tabela `user`
+-- Extraindo dados da tabela `user`
 --
 
 INSERT INTO `user` (`id`, `email`, `password`) VALUES
 (1, 'anderson@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),
-(2, 'anderson@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3');
+(2, 'frank@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3');
 
 --
--- Índices para tabelas despejadas
+-- Indexes for dumped tables
 --
 
 --
--- Índices de tabela `cliente`
+-- Indexes for table `cliente`
 --
 ALTER TABLE `cliente`
-  ADD PRIMARY KEY (`id_cliente`),
+  ADD PRIMARY KEY (`codigo`),
   ADD KEY `id_uf` (`id_uf`);
 
 --
--- Índices de tabela `uf`
+-- Indexes for table `uf`
 --
 ALTER TABLE `uf`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices de tabela `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
--- AUTO_INCREMENT para tabelas despejadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de tabela `cliente`
+-- AUTO_INCREMENT for table `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de tabela `uf`
+-- AUTO_INCREMENT for table `uf`
 --
 ALTER TABLE `uf`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT de tabela `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- Restrições para tabelas despejadas
+-- Constraints for dumped tables
 --
 
 --
--- Restrições para tabelas `cliente`
+-- Limitadores para a tabela `cliente`
 --
 ALTER TABLE `cliente`
   ADD CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`id_uf`) REFERENCES `uf` (`id`);

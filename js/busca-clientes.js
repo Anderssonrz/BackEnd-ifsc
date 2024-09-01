@@ -64,10 +64,10 @@ function buscaClientes(e) {
 
       for (let cliente of vetorClientes) {
         console.log("Cliente:", cliente); // Verifica cada cliente
-        html += `<tr><td>${cliente.codigo ?? 'N/A'}</td><td>${cliente.nome ?? 'N/A'}</td><td>${cliente.email ?? 'N/A'}</td><td>${cliente.id_uf ?? 'N/A'}</td>`;
+        html += `<tr><td>${cliente.id_cliente ?? 'N/A'}</td><td>${cliente.nome ?? 'N/A'}</td><td>${cliente.email ?? 'N/A'}</td><td>${cliente.id_uf ?? 'N/A'}</td>`;
         html += '<td>';
-        html += ` <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-info" onClick="showClienteUpdForm(${cliente.codigo})"><i class="fa-solid fa-pencil"></i></button>`;
-        html += ` <button class="btn btn-danger" onClick="delCliente(${cliente.codigo});"><i class="fa-solid fa-trash-can"></i></button>`;
+        html += ` <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-info" onClick="showClienteUpdForm(${cliente.id_cliente})"><i class="fa-solid fa-pencil"></i></button>`;
+        html += ` <button class="btn btn-danger" onClick="delCliente(${cliente.id_cliente});"><i class="fa-solid fa-trash-can"></i></button>`;
         html += '</td></tr>';
       }
       html += "</table>";
@@ -93,8 +93,8 @@ frmBuscaCliente.addEventListener("submit", buscaClientes);
 
 // ---------------------------------------------------------------------------------------
 
-function showClienteUpdForm(codigo) {
-  console.log("Entrou na função showClienteUpdForm com código:", codigo);
+function showClienteUpdForm(id_cliente) {
+  console.log("Entrou na função showClienteUpdForm com código:", id_cliente);
 
   let xhr = new XMLHttpRequest();
   xhr.onload = function () {
@@ -103,7 +103,7 @@ function showClienteUpdForm(codigo) {
       let cliente = JSON.parse(xhr.responseText)[0];
       console.log("Cliente:", cliente);
       const frm = document.getElementById("frmAlterarCliente");
-      frm.id_cliente.value = cliente.codigo;
+      frm.id_cliente.value = cliente.id_cliente;
       frm.nome.value = cliente.nome;
       frm.email.value = cliente.email;
       frm.id_uf.value = cliente.id_uf;
@@ -112,7 +112,7 @@ function showClienteUpdForm(codigo) {
     }
   };
 
-  xhr.open("GET", `cliente-get.php?codigo=${codigo}`);
+  xhr.open("GET", `cliente-get.php?id_cliente=${id_cliente}`);
   xhr.send();
 }
 
@@ -142,10 +142,10 @@ btnAtualizar.addEventListener("click", (e) => {
 
 // -------------------------------------------------------------------------------------
 
-function delCliente(id) {
+function delCliente(id_uf) {
   if (confirm("Confirma a exclusão do registro?")) {
     let data = new FormData();
-    data.append("id", id);
+    data.append("id", id_uf);
 
     let xhr = new XMLHttpRequest();
     xhr.onload = function () {
@@ -190,5 +190,5 @@ function carregarUFs(elementId) {
   };
 
   xhr.open("GET", "uf-controller.php");
-  xhr.send();
+  xhr.send(data);
 }

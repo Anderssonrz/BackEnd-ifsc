@@ -87,7 +87,7 @@ if (empty($_SESSION['email'])) {
                      </div>
                      <div class="mb-3">
                         <label for="uUf" class="form-label">UF</label>
-                        <select name="id_uf" id="uUf" class="form-select" required></select>
+                        <select name="id_uf" id="id_uf" class="form-select" required></select>
                      </div>
                   </form>
                </div>
