@@ -12,7 +12,7 @@ btn.addEventListener("click", (e) => {
          // buscar registros de clientes
          for (let cliente of vetorClientes) {
             html += "<tr>";
-            html += `<td>${cliente.codigo}</td>`;
+            html += `<td>${cliente.id_cliente}</td>`;
             html += `<td>${cliente.nome}</td>`;
             html += `<td>${cliente.email}</td>`;            
             html += "</tr>";
@@ -24,6 +24,6 @@ btn.addEventListener("click", (e) => {
          alert(`Erro: ${req.status} ${req.statusText}`);
       }
    }
-   req.open("GET", "busca-clientes.php");
+   req.open("GET", "ajax-04.php");
    req.send();
 })

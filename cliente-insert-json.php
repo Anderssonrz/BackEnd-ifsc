@@ -10,7 +10,7 @@ $file = fopen($filename, "a");
 
 // verifica se o arquivo foi aberto
 if ($file) {
-    $linha = "$cliente->codigo;$cliente->nome;$cliente->email\n";
+    $linha = "$cliente->id_cliente;$cliente->nome;$cliente->email;$cliente->id_uf\n";
     fwrite($file,$linha);
     fclose($file);
 }

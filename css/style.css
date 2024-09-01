@@ -1,0 +1,38 @@
+.container {
+width: 90vw;
+height: 90vh;
+background: #dfe5ed;
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+}
+
+.box {
+width: 300px;
+height: 300px;
+background: #dfe5ed;
+}
+
+.box1 {
+    width: 0px;
+    height: 0px;
+    background: #dfe5ed;
+    align-items: left;
+    }
+
+
+body {
+margin: 30px;
+
+}
+
+.titulo {
+    width: 100%;
+    
+    line-height: 40px;
+    font-size: 18px;
+    color: #22231f;
+    float: left;
+    text-align: center
+}
