@@ -119,7 +119,7 @@ function showClienteUpdForm(id_cliente) {
       frm.nome.value = cliente.nome;
       frm.email.value = cliente.email;
 
-      carregarUFs("uUf"); // Carregar UFs antes de definir o valor
+      carregarUFs("upUf"); // Carregar UFs antes de definir o valor
 
       // Espera para definir o UF após carregar as opções
       setTimeout(() => {
