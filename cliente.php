@@ -136,7 +136,7 @@ if (empty($_SESSION['email'])) {
                         <input type="email" class="form-control" name="email" id="upEmail" required>
                      </div>
                      <div class="mb-3">
-                        <label for="uUf" class="form-label">UF</label>
+                        <label for="upUf" class="form-label">UF</label>
                         <select name="id_uf" id="upUf" class="form-select" required></select>
                      </div>
                   </form>
