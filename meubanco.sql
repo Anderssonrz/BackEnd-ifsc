@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 01-Set-2024 às 18:15
+-- Tempo de geração: 02-Set-2024 às 05:43
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.0.30
 
@@ -42,9 +42,14 @@ INSERT INTO `cliente` (`id_cliente`, `nome`, `email`, `id_uf`) VALUES
 (3, 'Marcelo', 'marcelo@gmail.com', 3),
 (5, 'Jose', 'jose@google.com', 3),
 (6, 'Rafael', 'Rafael@ifsc.com', 4),
-(7, 'Marlon', 'marlon@bol.com', 1),
+(7, 'Marlon', 'marlon@hotmail.com', 1),
 (9, 'Bruna', 'bruna@gmail.com', 3),
-(10, 'Alan', 'alan@google.com', 3);
+(14, 'Maria', 'maria@gmail.com', 3),
+(15, 'Frank', 'frank', 8),
+(18, 'Knaesal', 'knaesal@gmail.com', 13),
+(19, 'Bruno', 'bruno@gmail.com', 3),
+(24, 'Alanzoka', 'alan@gmail.com', 5),
+(25, 'Dilma', 'dilma@gmail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -96,7 +101,11 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `email`, `password`) VALUES
 (1, 'anderson@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),
 (2, 'frank@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),
-(14, '4541379596@estudante.sed.sc.gov.br', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5');
+(14, '4541379596@estudante.sed.sc.gov.br', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5'),
+(16, 'dilma@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),
+(17, 'pedro@gmaill.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),
+(18, 'estela@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),
+(19, 'samir@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3');
 
 --
 -- Índices para tabelas despejadas
@@ -130,7 +139,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT de tabela `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de tabela `uf`
@@ -142,7 +151,7 @@ ALTER TABLE `uf`
 -- AUTO_INCREMENT de tabela `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Restrições para despejos de tabelas

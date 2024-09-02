@@ -8,7 +8,7 @@ const frmIncluirCliente = document.getElementById("frmIncluirCliente");
 const frmBuscaCliente = document.getElementById("frmBuscaCliente");
 
 // Carregar UFs quando abrir o modal de inclusão de cliente
-btnIncluirCliente.addEventListener("click", (e) => {
+btnIncluirCliente.addEventListener("click", () => {
   carregarUFs("inUf");
   bootstrap.Modal.getOrCreateInstance(document.getElementById("modalIncluirCliente")).show();
 });
@@ -42,9 +42,11 @@ document.addEventListener("DOMContentLoaded", buscaClientes);
 frmBuscaCliente.addEventListener("submit", buscaClientes);
 
 function buscaClientes(e) {
-  if (e) e.preventDefault(); // Previne o comportamento padrão do botão, se presente
+  if (e) e.preventDefault(); // Previne o comportamento padrão do formulário, se aplicável
+  
   const expressaoBusca = document.getElementById("expressaoBusca").value.trim();
   const req = new XMLHttpRequest();
+  
   req.onload = function () {
     if (req.status == 200) {
       console.log(req.responseText);
@@ -69,9 +71,13 @@ function buscaClientes(e) {
         html += `</td>`;
         html += `</tr>`;
       }
-
+      
       html += "</table>";
-      content.innerHTML = html;
+      if (content) {
+        content.innerHTML = html;
+      } else {
+        console.error("Elemento 'content' não encontrado.");
+      }
     } else {
       alert(`Erro: ${req.status} ${req.statusText}`);
     }
@@ -83,8 +89,13 @@ function buscaClientes(e) {
 
 // Função para limpar busca
 function limparBusca() {
-  document.getElementById('expressaoBusca').value = '';  // Limpa o valor do campo de busca
-  buscaClientes();  // Recarrega todos os clientes
+  const expressaoBusca = document.getElementById('expressaoBusca');
+  if (expressaoBusca) {
+    expressaoBusca.value = '';  // Limpa o valor do campo de busca
+    buscaClientes();  // Recarrega todos os clientes
+  } else {
+    console.error("Elemento 'expressaoBusca' não encontrado.");
+  }
 }
 
 function showClienteUpdForm(id_cliente) {
@@ -159,53 +170,64 @@ btnAtualizar.addEventListener("click", (e) => {
 
 // Função para excluir um cliente
 function delCliente(id_cliente) {
+  console.log("Excluindo cliente com ID:", id_cliente);  // Log para verificar o ID do cliente
+
   if (confirm("Confirma a exclusão do registro?")) {
     let data = new FormData();
     data.append("id_cliente", id_cliente);
 
     let xhr = new XMLHttpRequest();
     xhr.onload = function () {
+      console.log("Resposta da exclusão:", xhr.responseText);  // Log da resposta para verificar possíveis erros
       if (xhr.status == 200) {
         alert("Exclusão Ok");
         buscaClientes(); // Atualiza a lista de clientes
       } else {
         alert(`Erro: ${xhr.status} ${xhr.statusText}`);
-        console.error("Erro na exclusão:", xhr.responseText); // Logar a resposta para depuração
+        console.error("Erro na exclusão:", xhr.responseText);  // Log para depuração
       }
     };
 
-    xhr.open("POST", "cliente-delete.php");
+    xhr.onerror = function () {
+      console.error("Erro de rede ao tentar excluir o cliente.");
+    };
+
+    xhr.open("POST", "cliente-delete.php"); 
     xhr.send(data);
   }
 }
 
 function carregarUFs(elementId) {
   var elemSelectUf = document.getElementById(elementId);
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function () {
-    if (xhr.status == 200) {
-      console.log("Dados de UF:", xhr.responseText); // Verifica os dados das UF
-      var arrayUF = JSON.parse(xhr.responseText);
+  if (elemSelectUf) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        console.log("Dados de UF:", xhr.responseText); // Verifica os dados das UF
+        var arrayUF = JSON.parse(xhr.responseText);
 
-      if (!Array.isArray(arrayUF)) {
-        console.error("Erro: A resposta da API de UF não é um array.");
-        return;
+        if (!Array.isArray(arrayUF)) {
+          console.error("Erro: A resposta da API de UF não é um array.");
+          return;
+        }
+
+        elemSelectUf.innerHTML = ""; // Limpa as opções existentes
+        for (let uf of arrayUF) {
+          let elemOption = document.createElement("option");
+          elemOption.innerText = `${uf.sigla} - ${uf.nome}`;
+          elemOption.setAttribute('value', uf.id_uf);
+          elemSelectUf.appendChild(elemOption);
+        }
+      } else {
+        console.error(`Erro ao carregar UFs: ${xhr.status} ${xhr.statusText}`);
       }
+    };
 
-      elemSelectUf.innerHTML = ""; // Limpa as opções existentes
-      for (let uf of arrayUF) {
-        let elemOption = document.createElement("option");
-        elemOption.innerText = `${uf.sigla} - ${uf.nome}`;
-        elemOption.setAttribute('value', uf.id_uf);
-        elemSelectUf.appendChild(elemOption);
-      }
-    } else {
-      console.error(`Erro ao carregar UFs: ${xhr.status} ${xhr.statusText}`);
-    }
-  };
-
-  xhr.open("GET", "uf-controller.php");
-  xhr.send();
+    xhr.open("GET", "uf-controller.php");
+    xhr.send();
+  } else {
+    console.error(`Elemento com id '${elementId}' não encontrado.`);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

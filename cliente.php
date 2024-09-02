@@ -119,6 +119,7 @@ if (empty($_SESSION['email'])) {
                <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLabel">Modificar dados do cliente</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
                </div>
                <div class="modal-body">
                   <form id="frmAlterarCliente">
@@ -131,7 +132,7 @@ if (empty($_SESSION['email'])) {
                         <input type="text" class="form-control" name="nome" id="upNome" required>
                      </div>
                      <div class="mb-3">
-                        <label for="u´pEmail" class="form-label">E-mail</label>
+                        <label for="upEmail" class="form-label">E-mail</label>
                         <input type="email" class="form-control" name="email" id="upEmail" required>
                      </div>
                      <div class="mb-3">
@@ -143,6 +144,7 @@ if (empty($_SESSION['email'])) {
                <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                   <button type="button" id="btnAtualizar" class="btn btn-warning">Salvar Alterações</button>
+
                </div>
             </div>
          </div>
